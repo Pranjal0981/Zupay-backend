@@ -3,13 +3,12 @@ const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const MongoStore=require('connect-mongo')
-const axios = require('axios');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan')
 const indexRouter = require('./routes/indexRouter');
-const indexRouter = require('./routes/productRouter');
+const productRouter = require('./routes/postRouter');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
