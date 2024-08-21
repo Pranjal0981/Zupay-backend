@@ -2,6 +2,7 @@ const { catchAsyncErrors } = require('../middlewares/catchAsyncError');
 const User = require('../models/userModel');
 const { sendToken } = require('../utils/sendToken');
 const bcrypt = require('bcryptjs');
+const Comment=require('../models/commentModel')
 const mongoose = require('mongoose');
 const Post=require('../models/postModel')
 
@@ -209,5 +210,69 @@ exports.updatePostById = catchAsyncErrors(async (req, res, next) => {
         });
     } catch (error) {
         return next(error);
+    }
+});
+
+exports.searchPosts = async (req, res) => {
+    try {
+        const { title } = req.query; // Extract title from query parameters
+        const posts = await Post.find({
+            title: { $regex: title, $options: 'i' } // Case-insensitive search
+        });
+        res.json(posts);
+    } catch (error) {
+        res.status(500).json({ message: 'Error searching posts.' });
+    }
+};
+
+
+exports.fetchComments = catchAsyncErrors(async (req, res, next) => {
+    try {
+        const { postId } = req.params; // Extract postId from request parameters
+
+        // Fetch comments for the given postId
+        const comments = await Comment.find({ postId: postId }).populate('userId', 'firstName lastName',); // Populate userId to get user details
+
+        // Respond with the fetched comments
+        res.status(200).json({
+            success: true,
+            comments: comments,
+        });
+    } catch (error) {
+        next(error); // Pass the error to the error handler middleware
+    }
+});
+
+exports.addComments = catchAsyncErrors(async (req, res, next) => {
+    try {
+        const { postId, userId } = req.params; // Extract postId and userId from request parameters
+        const { data } = req.body; // Extract the comment text from the request body
+
+        // Find the post by ID
+        const post = await Post.findById(postId);
+
+        if (!post) {
+            return res.status(404).json({
+                success: false,
+                message: 'Post not found',
+            });
+        }
+
+        // Create the comment
+        const comment = await Comment.create({
+            postId: postId,
+            userId: userId,
+            text: data,
+            createdAt: new Date(),
+        });
+
+        // Respond with the new comment
+        res.status(200).json({
+            success: true,
+            message: 'Comment added successfully',
+            comment: comment,
+        });
+    } catch (error) {
+        next(error); // Pass the error to the error handler middleware
     }
 });
