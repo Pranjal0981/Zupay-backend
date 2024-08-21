@@ -168,7 +168,10 @@ exports.getPostById = catchAsyncErrors(async (req, res, next) => {
 
 exports.deletePostById = catchAsyncErrors(async (req, res, next) => {
     try {
-        const post = await Post.findByIdAndDelete(req.params.id); // Delete post by ID
+        const { id } = req.params; // Get the post ID from request parameters
+
+        // Find and delete the post
+        const post = await Post.findByIdAndDelete(id);
 
         if (!post) {
             return res.status(404).json({
@@ -177,15 +180,17 @@ exports.deletePostById = catchAsyncErrors(async (req, res, next) => {
             });
         }
 
+        // Delete all comments related to the deleted post
+        await Comment.deleteMany({ postId: id });
+
         res.status(200).json({
             success: true,
-            message: 'Post deleted successfully',
+            message: 'Post and related comments deleted successfully',
         });
     } catch (error) {
-        return next(error);
+        next(error); // Pass the error to the error handler middleware
     }
 });
-
 
 exports.updatePostById = catchAsyncErrors(async (req, res, next) => {
     try {

@@ -10,7 +10,7 @@ const logger = require('morgan')
 const indexRouter = require('./routes/indexRouter');
 const postRouter = require('./routes/postRouter');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 const app = express();
 require('./models/config');
 
