@@ -100,7 +100,7 @@ exports.createPost = catchAsyncErrors(async (req, res, next) => {
     try {
         const { title, excerpt, content } = req.body;
         const { userId } = req.params;
-
+console.log(req.body)
         // Validate required fields
         if (!title || !excerpt || !content || !userId) {
             return res.status(400).json({
@@ -153,6 +153,7 @@ exports.getPostById = catchAsyncErrors(async (req, res, next) => {
                 message: 'Post not found',
             });
         }
+        console.log(post)
 
         res.status(200).json({
             success: true,

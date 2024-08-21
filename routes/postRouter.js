@@ -4,7 +4,7 @@ const { isAuthenticated } = require('../middlewares/auth')
 const router = express.Router()
 
 
-router.post('/create-post',isAuthenticated, createPost)
+router.post('/create-post/:userId',isAuthenticated, createPost)
 
 router.get('/view-posts',getAllPosts);
 
