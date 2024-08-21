@@ -16,7 +16,7 @@ require('./models/config');
 
 // CORS configuration
 const corsOptions = {
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173','https://zupay-frontend.onrender.com'],
     credentials: true
 };
 
