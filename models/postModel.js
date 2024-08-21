@@ -21,6 +21,12 @@ const PostSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Content is required'], // Content is mandatory
   },
+  // Reference to the user who created the post
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // Ensure you have a User model to reference
+    required: true, // Make sure this is required if you always want a user reference
+  },
   // Timestamp of when the post was created
   createdAt: {
     type: Date,

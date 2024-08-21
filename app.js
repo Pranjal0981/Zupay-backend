@@ -10,7 +10,7 @@ const logger = require('morgan')
 const indexRouter = require('./routes/indexRouter');
 const productRouter = require('./routes/postRouter');
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 const app = express();
 require('./models/config');
 
@@ -23,6 +23,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
@@ -43,7 +44,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/user', indexRouter);
-app.use('/post',postRouter)
+// app.use('/post',postRouter)
 
 app.all("*", (req, res, next) => {
     res.status(404).send('404 - Not Found');
